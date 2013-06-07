@@ -1,3 +1,14 @@
-test/kitchen/.kitchen/
+*~
+*#
+.#*
+\#*#
+.*.sw[a-z]
+*.un~
+/cookbooks
 
+# Bundler
 Gemfile.lock
+bin/*
+.bundle/*
+
+.kitchen/
