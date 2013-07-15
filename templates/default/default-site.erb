@@ -24,13 +24,13 @@
                 Allow from all
         </Directory>
 
-        ErrorLog <%= node['apache']['log_dir'] %>/error.log
+        ErrorLog <%= node['apache']['log_dir'] %>/<%= node['apache']['error_log'] %>
 
         # Possible values include: debug, info, notice, warn, error, crit,
         # alert, emerg.
         LogLevel warn
 
-        CustomLog <%= node['apache']['log_dir'] %>/access.log combined
+        CustomLog <%= node['apache']['log_dir'] %>/<%= node['apache']['access_log'] %> combined
         ServerSignature On
 
         Alias /doc/ "/usr/share/doc/"
