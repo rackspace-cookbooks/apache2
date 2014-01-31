@@ -1,8 +1,13 @@
 #
-# Cookbook Name:: apache2
+# Author:: Adam Jacob <adam@opscode.com>
+# Author:: Joshua Timberman <joshua@opscode.com>
+# Author:: Christopher.Coffey <christopher.coffey@rackspace.com>
+#
+# Cookbook Name:: rackspace_apache
 # Recipe:: logrotate
 #
 # Copyright 2012, Opscode, Inc.
+# Copyright 2014, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,10 +27,10 @@ apache_service = service 'apache2' do
 end
 
 begin
-  include_recipe 'logrotate'
+  include_recipe 'rackspace_logrotate'
 rescue
-  Chef::Log.warn('The apache::logrotate recipe requires the logrotate cookbook. Install the cookbook with `knife cookbook site install logrotate`.')
+  Chef::Log.warn('The rackspace_apache::logrotate recipe requires the rackspace_logrotate cookbook. Install the cookbook with `knife cookbook site install logrotate`.')
 end
-logrotate_app apache_service.service_name do
-  path node['apache']['log_dir']
+rackspace_logrotate_app apache_service.service_name do
+  path node['rackspace_apache']['log_dir']
 end

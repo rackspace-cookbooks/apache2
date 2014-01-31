@@ -24,39 +24,27 @@ platforms:
 suites:
 - name: default 
   run_list:
-  - recipe[apache2::default]
-  - recipe[apache2_test::default]
+  - recipe[rackspace_apache::default]
+  - recipe[rackspace_apache_test::default]
   attributes: {}
 
 - name: mod_auth_basic
   run_list:
-  - recipe[apache2::default]
-  - recipe[apache2_test::mod_auth_basic]
+  - recipe[rackspace_apache::default]
+  - recipe[rackspace_apache_test::mod_auth_basic]
   attributes: {}
 
 - name: mod_auth_digest
   run_list:
-  - recipe[apache2::default]
-  - recipe[apache2_test::mod_auth_digest]
+  - recipe[rackspace_apache::default]
+  - recipe[rackspace_apache_test::mod_auth_digest]
   attributes: {}
-
-- name: mod_auth_openid
-  run_list:
-  - recipe[apache2::default]
-  - recipe[apache2_test::mod_auth_openid]
-  attributes: {}
-
-# mod_authnz_ldap currently won't install on centos and also requires a cert to run breaking tests
-#- name: mod_authnz_ldap
-#  run_list:
-#  - recipe[apache2::default]
-#  - recipe[apache2_test::mod_authnz_ldap]
 
 - name: mod_authz
   run_list:
-  - recipe[apache2::default]
-  - recipe[apache2_test::mod_authz_listed_host]
-  - recipe[apache2_test::mod_authz_unlisted_host]
-  - recipe[apache2_test::mod_authz_user]
+  - recipe[rackspace_apache::default]
+  - recipe[rackspace_apache_test::mod_authz_listed_host]
+  - recipe[rackspace_apache_test::mod_authz_unlisted_host]
+  - recipe[rackspace_apache_test::mod_authz_user]
   attributes: {}
 
