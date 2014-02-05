@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-SYSCONFDIR='<%= node['apache']['dir'] %>'
+SYSCONFDIR='<%= node['rackspace_apache']['dir'] %>'
 
 if [ -z $1 ]; then
         echo "Which module would you like to enable?"
@@ -14,8 +14,8 @@ else
 fi
 
 #figure out if we're on a prefork or threaded mpm
-if [ -x <%= node['apache']['binary'] %> ]; then
-    PREFORK=`<%= node['apache']['binary'] %> -l | grep prefork || true`
+if [ -x <%= node['rackspace_apache']['binary'] %> ]; then
+    PREFORK=`<%= node['rackspace_apache']['binary'] %> -l | grep prefork || true`
 fi
 
 if [ -e $SYSCONFDIR/mods-enabled/$MODNAME.load -a -e $SYSCONFDIR/mods-enabled/$MODNAME.conf ]; then

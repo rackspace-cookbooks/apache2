@@ -21,85 +21,86 @@
 
 # checks to see if module is listed in default_modules list and if so install.
 
-if node['rackspace_apache']['default_modules'].include('status')
-  rackspace_apache_module 'status' do
+if node['rackspace_apache']['default_modules'].include?('status')
+  apache_module 'status' do
     conf true
   end
 end
 
-if node['rackspace_apache']['default_modules'].include('alias')
-  rackspace_apache_module 'alias' do
+if node['rackspace_apache']['default_modules'].include?('alias')
+  apache_module 'alias' do
     conf true
   end
 end
 
-if node['rackspace_apache']['default_modules'].include('auth_basic')
-  rackspace_apache_module 'auth_basic'
+if node['rackspace_apache']['default_modules'].include?('auth_basic')
+  apache_module 'auth_basic'
 end
 
-if node['rackspace_apache']['default_modules'].include('authn_file')
-  rackspace_apache_module 'authn_file'
+if node['rackspace_apache']['default_modules'].include?('authn_file')
+  apache_module 'authn_file'
 end
 
-if node['rackspace_apache']['default_modules'].include('authz_default')
-  rackspace_apache_module 'authz_default'
+if node['rackspace_apache']['default_modules'].include?('authz_default')
+  apache_module 'authz_default'
 end
 
-if node['rackspace_apache']['default_modules'].include('authz_groupfile')
-  rackspace_apache_module 'authz_groupfile'
+if node['rackspace_apache']['default_modules'].include?('authz_groupfile')
+  apache_module 'authz_groupfile'
 end
 
-if node['rackspace_apache']['default_modules'].include('authz_host')
-  rackspace_apache_module 'authz_host'
+if node['rackspace_apache']['default_modules'].include?('authz_host')
+  apache_module 'authz_host'
 end
 
-if node['rackspace_apache']['default_modules'].include('authz_user')
-  rackspace_apache_module 'authz_user'
+if node['rackspace_apache']['default_modules'].include?('authz_user')
+  apache_module 'authz_user'
 end
 
-if node['rackspace_apache']['default_modules'].include('autoindex')
-  rackspace_apache_module 'autoindex' do
+if node['rackspace_apache']['default_modules'].include?('autoindex')
+  apache_module 'autoindex' do
     conf true
   end
 end
 
-if node['rackspace_apache']['default_modules'].include('dir')
-  rackspace_apache_module 'dir' do
+if node['rackspace_apache']['default_modules'].include?('dir')
+  apache_module 'dir' do
     conf true
   end
 end
 
-if node['rackspace_apache']['default_modules'].include('env')
-  rackspace_apache_module 'env'
+if node['rackspace_apache']['default_modules'].include?('env')
+  apache_module 'env'
 end
 
-if node['rackspace_apache']['default_modules'].include('mime')
-  rackspace_apache_module 'mime' do
+if node['rackspace_apache']['default_modules'].include?('mime')
+  apache_module 'mime' do
     conf true
   end
 end
 
-if node['rackspace_apache']['default_modules'].include('negotiation')
-  rackspace_apache_module 'negotiation' do
+if node['rackspace_apache']['default_modules'].include?('negotiation')
+  apache_module 'negotiation' do
     conf true
   end
 end
 
-if node['rackspace_apache']['default_modules'].include('setenvif')
-  rackspace_apache_module 'setenvif' do
+if node['rackspace_apache']['default_modules'].include?('setenvif')
+  apache_module 'setenvif' do
     conf true
   end
 end
 
-if node['rackspace_apache']['default_modules'].include('log_config')
-  rackspace_apache_module 'log_config'
+if node['rackspace_apache']['default_modules'].include?('log_config')
+  apache_module 'log_config'
 end
 
-if node['rackspace_apache']['default_modules'].include('logio')
-  rackspace_apache_module 'logio'
+if node['rackspace_apache']['default_modules'].include?('logio')
+  apache_module 'logio'
 end
 
-# checks for additional standard modules to install
+# checks for additional modules to install
+
 
 
 

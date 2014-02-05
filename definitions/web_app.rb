@@ -1,8 +1,9 @@
 #
-# Cookbook Name:: apache2
+# Cookbook Name:: rackspace_apache
 # Definition:: web_app
 #
 # Copyright 2008-2013, Opscode, Inc.
+# Copyright 2014, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,22 +22,21 @@ define :web_app, :template => 'web_app.conf.erb', :enable => true do
 
   application_name = params[:name]
 
-  include_recipe 'apache2::default'
-  include_recipe 'apache2::mod_rewrite'
-  include_recipe 'apache2::mod_deflate'
-  include_recipe 'apache2::mod_headers'
+  include_recipe 'rackspace_apache::default'
+  apache_module 'rewrite'
+  apache_module 'headers'
 
-  template "#{node['apache']['dir']}/sites-available/#{application_name}.conf" do
+  template "#{node['rackspace_apache']['dir']}/sites-available/#{application_name}.conf" do
     source   params[:template]
     owner    'root'
-    group    node['apache']['root_group']
+    group    node['rackspace_apache']['root_group']
     mode     '0644'
     cookbook params[:cookbook] if params[:cookbook]
     variables(
       :application_name => application_name,
       :params           => params
     )
-    if ::File.exists?("#{node['apache']['dir']}/sites-enabled/#{application_name}.conf")
+    if ::File.exists?("#{node['rackspace_apache']['dir']}/sites-enabled/#{application_name}.conf")
       notifies :reload, 'service[apache2]'
     end
   end

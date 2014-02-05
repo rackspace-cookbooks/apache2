@@ -92,7 +92,7 @@ if platform_family?('rhel')
   end
 
   # enable mod_deflate for consistency across distributions
-  rackspace_apache_module 'deflate' do
+  apache_module 'deflate' do
     conf true
   end
 end
@@ -171,7 +171,7 @@ end
 
 include_recipe 'rackspace_apache::modules'
 
-rackspace_apache_site 'default' do
+apache_site 'default' do
   enable node['rackspace_apache']['default_site_enabled']
 end
 

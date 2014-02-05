@@ -31,6 +31,6 @@ begin
 rescue
   Chef::Log.warn('The rackspace_apache::logrotate recipe requires the rackspace_logrotate cookbook. Install the cookbook with `knife cookbook site install logrotate`.')
 end
-rackspace_logrotate_app apache_service.service_name do
+logrotate_app apache_service.service_name do
   path node['rackspace_apache']['log_dir']
 end

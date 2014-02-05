@@ -1,4 +1,4 @@
-name              'rackspace_apache2'
+name              'rackspace_apache'
 maintainer        'Rackspace US, Inc.'
 maintainer_email  'rackspace-cookbooks@rackspace.com'
 license           'Apache 2.0'
