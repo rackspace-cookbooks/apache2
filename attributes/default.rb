@@ -21,8 +21,6 @@
 # limitations under the License.
 #
 
-default['rackspace_apache']['root_group'] = 'root'
-
 # default modules (all OS's)
 default['rackspace_apache']['default_modules'] = %w[
   status alias auth_basic authn_file authz_default authz_groupfile authz_host authz_user autoindex
@@ -34,12 +32,20 @@ default['rackspace_apache']['default_modules'] = %w[
   default['rackspace_apache']['default_modules'] << log_mod if %w[rhel].include?(node['platform_family'])
 end
 
-# Hash for additional modules to be installed
-default['rackspace_apache']['additional_module'] = []
+# addtional modules to install (set to true if needed)
+default['rackspace_apache']['enable_mod_ssl'] = false
+default['rackspace_apache']['enable_mod_proxy'] = false
+default['rackspace_apache']['enable_mod_rewrite'] = false
+default['rackspace_apache']['enable_mod_wsgi'] = false
+default['rackspace_apache']['enable_mod_cgi'] = false
+default['rackspace_apache']['enable_mod_php5'] = false
 
-# Where the various parts of apache are
-case node['platform']
-when 'redhat', 'centos'
+# Hash for additional modules to be installed
+default['rackspace_apache']['additional_modules'] = []
+
+# Where the various parts of apache are located
+case node['platform_family']
+when 'rhel'
   default['rackspace_apache']['package']     = 'httpd'
   default['rackspace_apache']['dir']         = '/etc/httpd'
   default['rackspace_apache']['log_dir']     = '/var/log/httpd'
@@ -60,7 +66,7 @@ when 'redhat', 'centos'
   default['rackspace_apache']['lib_dir']     = node['kernel']['machine'] =~ /^i[36]86$/ ? '/usr/lib/httpd' : '/usr/lib64/httpd'
   default['rackspace_apache']['libexecdir']  = "#{node['rackspace_apache']['lib_dir']}/modules"
   default['rackspace_apache']['default_site_enabled'] = false
-when 'debian', 'ubuntu'
+when 'debian'
   default['rackspace_apache']['package']     = 'apache2'
   default['rackspace_apache']['dir']         = '/etc/apache2'
   default['rackspace_apache']['log_dir']     = '/var/log/apache2'
@@ -79,7 +85,7 @@ when 'debian', 'ubuntu'
   default['rackspace_apache']['default_site_enabled'] = false
 end
 
-# General settings
+# General configuration settings
 default['rackspace_apache']['config']['listen_addresses']  = %w[*]
 default['rackspace_apache']['config']['listen_ports']      = %w[80]
 default['rackspace_apache']['config']['contact']           = 'ops@example.com'
@@ -93,17 +99,11 @@ default['rackspace_apache']['config']['servertokens']    = 'Prod'
 default['rackspace_apache']['config']['serversignature'] = 'On'
 default['rackspace_apache']['config']['traceenable']     = 'On'
 
-# mod_auth_openids
-default['rackspace_apache']['config']['allowed_openids'] = []
-
 # mod_status Allow list, space seprated list of allowed entries.
 default['rackspace_apache']['config']['status_allow_list'] = 'localhost ip6-localhost'
 
 # mod_status ExtendedStatus, set to 'true' to enable
 default['rackspace_apache']['config']['ext_status'] = false
-
-# mod_info Allow list, space seprated list of allowed entries.
-default['rackspace_apache']['config']['info_allow_list'] = 'localhost ip6-localhost'
 
 # Prefork Attributes
 default['rackspace_apache']['config']['prefork']['startservers']        = 16
@@ -122,11 +122,21 @@ default['rackspace_apache']['config']['worker']['maxsparethreads']     = 192
 default['rackspace_apache']['config']['worker']['threadsperchild']     = 64
 default['rackspace_apache']['config']['worker']['maxrequestsperchild'] = 0
 
+# template cookbook locations
+default['rackspace_apache']['template_cookbook']['module_conf_generate'] = 'rackspace_apache'
+default['rackspace_apache']['template_cookbook']['modscript'] = 'rackspace_apache'
+default['rackspace_apache']['template_cookbook']['preferred_exec'] = 'rackspace_apache'
+default['rackspace_apache']['template_cookbook']['apache2_conf'] = 'rackspace_apache'
+default['rackspace_apache']['template_cookbook']['apache2_security'] = 'rackspace_apache'
+default['rackspace_apache']['template_cookbook']['charset'] = 'rackspace_apache'
+default['rackspace_apache']['template_cookbook']['ports'] = 'rackspace_apache'
+default['rackspace_apache']['template_cookbook']['default_site'] = 'rackspace_apache'
+
+
 # mod_proxy settings
 default['rackspace_apache']['config']['proxy']['order']      = 'deny,allow'
 default['rackspace_apache']['config']['proxy']['deny_from']  = 'all'
 default['rackspace_apache']['config']['proxy']['allow_from'] = 'none'
 
 # mod_ssl specific settings
-default['rackspace_apache']['enable_mod_ssl'] = false
 default['rackspace_apache']['mod_ssl']['cipher_suite'] = 'RC4-SHA:HIGH:!ADH'

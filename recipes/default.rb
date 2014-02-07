@@ -49,17 +49,18 @@ if platform_family?('rhel')
   package 'perl'
 
   cookbook_file '/usr/local/bin/apache2_module_conf_generate.pl' do
+    cookbook node['rackspace_apache']['template_cookbook']['module_conf_generate']
     source 'apache2_module_conf_generate.pl'
     mode   '0755'
     owner  'root'
-    group  node['rackspace_apache']['root_group']
+    group  'root'
   end
 
   %w[sites-available sites-enabled mods-available mods-enabled].each do |dir|
     directory "#{node['rackspace_apache']['dir']}/#{dir}" do
       mode  '0755'
       owner 'root'
-      group node['rackspace_apache']['root_group']
+      group 'root'
     end
   end
 
@@ -70,10 +71,11 @@ if platform_family?('rhel')
 
   %w[a2ensite a2dissite a2enmod a2dismod].each do |modscript|
     template "/usr/sbin/#{modscript}" do
+      cookbook node['rackspace_apache']['template_cookbook']['modscript']
       source "#{modscript}.erb"
       mode  '0700'
       owner 'root'
-      group node['rackspace_apache']['root_group']
+      group 'root'
     end
   end
 
@@ -105,15 +107,16 @@ end
   directory path do
     mode  '0755'
     owner 'root'
-    group node['rackspace_apache']['root_group']
+    group 'root'
   end
 end
 
 # Set the preferred execution binary - prefork or worker
 template '/etc/sysconfig/httpd' do
+  cookbook node['rackspace_apache']['template_cookbook']['preferred_exec'] 
   source   'etc-sysconfig-httpd.erb'
   owner    'root'
-  group    node['rackspace_apache']['root_group']
+  group    'root'
   mode     '0644'
   notifies :restart, 'service[apache2]'
   only_if  { platform_family?('rhel') }
@@ -126,18 +129,20 @@ template 'apache2.conf' do
   when 'debian'
     path "#{node['rackspace_apache']['dir']}/apache2.conf"
   end
+  cookbook node['rackspace_apache']['template_cookbook']['apache2_conf']
   source   'apache2.conf.erb'
   owner    'root'
-  group    node['rackspace_apache']['root_group']
+  group    'root'
   mode     '0644'
   notifies :restart, 'service[apache2]'
 end
 
 template 'apache2-conf-security' do
   path     "#{node['rackspace_apache']['dir']}/conf.d/security.conf"
+  cookbook node['rackspace_apache']['template_cookbook']['apache2_security']
   source   'security.erb'
   owner    'root'
-  group    node['rackspace_apache']['root_group']
+  group    'root'
   mode     '0644'
   backup   false
   notifies :restart, 'service[apache2]'
@@ -145,26 +150,29 @@ end
 
 template 'apache2-conf-charset' do
   path      "#{node['rackspace_apache']['dir']}/conf.d/charset.conf"
+  cookbook node['rackspace_apache']['template_cookbook']['charset']
   source   'charset.erb'
   owner    'root'
-  group    node['rackspace_apache']['root_group']
+  group    'root'
   mode     '0644'
   backup   false
   notifies :restart, 'service[apache2]'
 end
 
 template "#{node['rackspace_apache']['dir']}/ports.conf" do
+  cookbook node['rackspace_apache']['template_cookbook']['ports']
   source   'ports.conf.erb'
   owner    'root'
-  group    node['rackspace_apache']['root_group']
+  group    'root'
   mode     '0644'
   notifies :restart, 'service[apache2]'
 end
 
 template "#{node['rackspace_apache']['dir']}/sites-available/default" do
+  cookbook node['rackspace_apache']['template_cookbook']['default_site']
   source   'default-site.erb'
   owner    'root'
-  group    node['rackspace_apache']['root_group']
+  group    'root'
   mode     '0644'
   notifies :restart, 'service[apache2]'
 end
