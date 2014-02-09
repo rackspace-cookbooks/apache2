@@ -38,7 +38,7 @@ default['rackspace_apache']['enable_mod_proxy'] = false
 default['rackspace_apache']['enable_mod_rewrite'] = false
 default['rackspace_apache']['enable_mod_wsgi'] = false
 default['rackspace_apache']['enable_mod_cgi'] = false
-default['rackspace_apache']['enable_mod_php5'] = false
+default['rackspace_apache']['enable_mod_php5'] = true
 
 # Hash for additional modules to be installed
 default['rackspace_apache']['additional_modules'] = []
