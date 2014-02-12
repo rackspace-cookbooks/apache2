@@ -18,4 +18,4 @@
 # limitations under the License.
 #
 
-include_recipe "rackspace_apache::default"
+include_recipe 'rackspace_apache::default'

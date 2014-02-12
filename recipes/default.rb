@@ -179,8 +179,6 @@ end
 
 include_recipe 'rackspace_apache::modules'
 
-include_recipe 'rackspace_apache::logrotate'
-
 apache_site 'default' do
   enable node['rackspace_apache']['default_site_enabled']
 end

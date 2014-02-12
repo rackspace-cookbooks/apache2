@@ -29,4 +29,3 @@ default['apache_test']['ssl_dir'] = '/home/apache2'
 default['apache_test']['ssl_cert_file'] = "#{node['apache_test']['ssl_dir']}/server.crt"
 default['apache_test']['ssl_cert_key_file'] = "#{node['apache_test']['ssl_dir']}/server.key"
 default['domain'] = 'example.com'
-

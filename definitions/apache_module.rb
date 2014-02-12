@@ -27,11 +27,10 @@ define :apache_module, :enable => true, :conf => false do
 
   apache_conf params[:name] if params[:conf]
 
-  if platform_family?('rhel')
-    file "#{node['rackspace_apache']['dir']}/mods-available/#{params[:name]}.load" do
-      content "LoadModule #{params[:identifier]} #{params[:module_path]}\n"
-      mode    '0644'
-    end
+  file "#{node['rackspace_apache']['dir']}/mods-available/#{params[:name]}.load" do
+    content "LoadModule #{params[:identifier]} #{params[:module_path]}\n"
+    mode    '0644'
+    only_if { platform_family?('rhel') }
   end
 
   if params[:enable]
