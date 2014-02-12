@@ -64,7 +64,7 @@
   #   List the ciphers that the client is permitted to negotiate.
   #   See the mod_ssl documentation for a complete list.
   #   enable only secure ciphers:
-  SSLCipherSuite <%= node['apache']['mod_ssl']['cipher_suite'] %>
+  SSLCipherSuite <%= node['rackspace_apache']['config']['mod_ssl']['cipher_suite'] %>
   #   Use this instead if you want to allow cipher upgrades via SGC facility.
   #   In this case you also have to use something like
   #        SSLRequire %{SSL_CIPHER_USEKEYSIZE} >= 128

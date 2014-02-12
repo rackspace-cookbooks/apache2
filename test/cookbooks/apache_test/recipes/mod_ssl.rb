@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-node['rackspace_apache']['enable_mod_ssl'] = true
+node.default['rackspace_apache']['enable_mod_ssl'] = true
 
 include_recipe "rackspace_apache::default"
 include_recipe "rackspace_apache::modules"
@@ -38,9 +38,9 @@ end
 execute "create-certficate" do
   command %Q{openssl req -new -x509 -key #{node['apache_test']['ssl_cert_key_file']} -out #{node['apache_test']['ssl_cert_file']} -days 1 <<EOF
 US
-Washington
-Seattle
-Opscode, Inc
+Texas
+San Antonio
+Rackspace US, Inc
 
 example.com
 webmaster@example.com

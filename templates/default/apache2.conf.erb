@@ -18,7 +18,7 @@ LockFile logs/accept.lock
 # PidFile: The file in which the server should record its process
 # identification number when it starts.
 #
-PidFile <%= node['rackspace_apache']['config']['pid_file'] %>
+PidFile <%= node['rackspace_apache']['pid_file'] %>
 
 #
 # Timeout: The number of seconds before receives and sends time out.

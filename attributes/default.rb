@@ -23,8 +23,8 @@
 
 # default modules (all OS's)
 default['rackspace_apache']['default_modules'] = %w[
-  status alias auth_basic authn_file authz_default authz_groupfile authz_host authz_user autoindex
-  dir env mime negotiation setenvif
+  status alias auth_basic authn_file authz_default authz_groupfile authz_host authz_user authz_host autoindex
+  dir env mime negotiation setenvif rewrite
 ]
 
 # additional default modules for rhel platform_family
@@ -35,10 +35,9 @@ end
 # addtional modules to install (set to true if needed)
 default['rackspace_apache']['enable_mod_ssl'] = false
 default['rackspace_apache']['enable_mod_proxy'] = false
-default['rackspace_apache']['enable_mod_rewrite'] = false
 default['rackspace_apache']['enable_mod_wsgi'] = false
 default['rackspace_apache']['enable_mod_cgi'] = false
-default['rackspace_apache']['enable_mod_php5'] = true
+default['rackspace_apache']['enable_mod_php5'] = false
 
 # Hash for additional modules to be installed
 default['rackspace_apache']['additional_modules'] = []
@@ -58,11 +57,7 @@ when 'rhel'
   default['rackspace_apache']['cgibin_dir']  = '/var/www/cgi-bin'
   default['rackspace_apache']['icondir']     = '/var/www/icons'
   default['rackspace_apache']['cache_dir']   = '/var/cache/httpd'
-  default['rackspace_apache']['pid_file']    = if node['platform_version'].to_f >= 6
-                                       '/var/run/httpd/httpd.pid'
-                                     else
-                                       '/var/run/httpd.pid'
-                                     end
+  default['rackspace_apache']['pid_file']    = '/var/run/httpd.pid'
   default['rackspace_apache']['lib_dir']     = node['kernel']['machine'] =~ /^i[36]86$/ ? '/usr/lib/httpd' : '/usr/lib64/httpd'
   default['rackspace_apache']['libexecdir']  = "#{node['rackspace_apache']['lib_dir']}/modules"
   default['rackspace_apache']['default_site_enabled'] = false
@@ -88,7 +83,7 @@ end
 # General configuration settings
 default['rackspace_apache']['config']['listen_addresses']  = %w[*]
 default['rackspace_apache']['config']['listen_ports']      = %w[80]
-default['rackspace_apache']['config']['contact']           = 'ops@example.com'
+default['rackspace_apache']['config']['contact']           = 'apache@example.com'
 default['rackspace_apache']['config']['timeout']           = 300
 default['rackspace_apache']['config']['keepalive']         = 'On'
 default['rackspace_apache']['config']['keepaliverequests'] = 100
@@ -132,11 +127,10 @@ default['rackspace_apache']['template_cookbook']['charset'] = 'rackspace_apache'
 default['rackspace_apache']['template_cookbook']['ports'] = 'rackspace_apache'
 default['rackspace_apache']['template_cookbook']['default_site'] = 'rackspace_apache'
 
-
 # mod_proxy settings
 default['rackspace_apache']['config']['proxy']['order']      = 'deny,allow'
 default['rackspace_apache']['config']['proxy']['deny_from']  = 'all'
 default['rackspace_apache']['config']['proxy']['allow_from'] = 'none'
 
 # mod_ssl specific settings
-default['rackspace_apache']['mod_ssl']['cipher_suite'] = 'RC4-SHA:HIGH:!ADH'
+default['rackspace_apache']['config']['mod_ssl']['cipher_suite'] = 'RC4-SHA:HIGH:!ADH'

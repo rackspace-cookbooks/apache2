@@ -6,4 +6,5 @@ description       'Installs and configures all aspects of apache2 using Debian s
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version           '2.0.0'
 
-depends 'rackspace_logrotate', '~> 2.0.0'
+depends 'rackspace_logrotate', '~> 2.0'
+depends 'rackspace_php', '~> 2.1'

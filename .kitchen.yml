@@ -34,17 +34,12 @@ suites:
   - recipe[rackspace_apache_test::mod_auth_basic]
   attributes: {}
 
-- name: mod_auth_digest
+- name: mod_ssl
   run_list:
   - recipe[rackspace_apache::default]
-  - recipe[rackspace_apache_test::mod_auth_digest]
-  attributes: {}
-
-- name: mod_authz
-  run_list:
-  - recipe[rackspace_apache::default]
-  - recipe[rackspace_apache_test::mod_authz_listed_host]
-  - recipe[rackspace_apache_test::mod_authz_unlisted_host]
-  - recipe[rackspace_apache_test::mod_authz_user]
-  attributes: {}
+  - recipe[rackspace_apache_test::mod_ssl]
+  attributes: 
+    rackspace_apache:
+      enable_mod_ssl: true
+  
 

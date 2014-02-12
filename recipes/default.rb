@@ -113,7 +113,7 @@ end
 
 # Set the preferred execution binary - prefork or worker
 template '/etc/sysconfig/httpd' do
-  cookbook node['rackspace_apache']['template_cookbook']['preferred_exec'] 
+  cookbook node['rackspace_apache']['template_cookbook']['preferred_exec']
   source   'etc-sysconfig-httpd.erb'
   owner    'root'
   group    'root'
@@ -179,12 +179,8 @@ end
 
 include_recipe 'rackspace_apache::modules'
 
-apache_site 'default' do
-  enable node['rackspace_apache']['default_site_enabled']
-end
-
 include_recipe 'rackspace_apache::logrotate'
 
-service 'apache2' do
-  action :start
+apache_site 'default' do
+  enable node['rackspace_apache']['default_site_enabled']
 end

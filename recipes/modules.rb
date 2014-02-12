@@ -18,7 +18,6 @@
 # limitations under the License.
 #
 
-
 # checks to see if module is listed in default_modules list and if so install.
 if node['rackspace_apache']['default_modules'].include?('status')
   apache_module 'status' do
@@ -68,6 +67,10 @@ if node['rackspace_apache']['default_modules'].include?('dir')
   end
 end
 
+if node['rackspace_apache']['default_modules'].include?('authz_host')
+  apache_module 'authz_host'
+end
+
 if node['rackspace_apache']['default_modules'].include?('env')
   apache_module 'env'
 end
@@ -98,11 +101,15 @@ if node['rackspace_apache']['default_modules'].include?('logio')
   apache_module 'logio'
 end
 
+if node['rackspace_apache']['default_modules'].include?('rewrite')
+  apache_module 'rewrite'
+end
+
 # checks for additional modules to install
 
 if node['rackspace_apache']['enable_mod_ssl'] == true
-  unless node['rackspace_apache']['listen_ports'].include?('443')
-    node.set['rackspace_apache']['listen_ports'] = node['rackspace_apache']['listen_ports'] + ['443']
+  unless node['rackspace_apache']['config']['listen_ports'].include?('443')
+    node.set['rackspace_apache']['config']['listen_ports'] = node['rackspace_apache']['config']['listen_ports'] + ['443']
   end
   
   if platform_family?('rhel')
@@ -134,10 +141,6 @@ if node['rackspace_apache']['enable_mod_proxy'] == true
   end
 end
 
-if node['rackspace_apache']['enable_mod_rewrite'] == true
-  apache_module 'rewrite'
-end
-
 if node['rackspace_apache']['enable_mod_wsgi'] == true
   case node['platform_family']
   when 'debian'
@@ -148,7 +151,7 @@ if node['rackspace_apache']['enable_mod_wsgi'] == true
     end
   end
 
-  file "#{node['apache']['dir']}/conf.d/wsgi.conf" do
+  file "#{node['rackspace_apache']['dir']}/conf.d/wsgi.conf" do
     action :delete
     backup false
   end
@@ -164,11 +167,11 @@ if node['rackspace_apache']['enable_mod_php5'] == true
   case node['platform_family']
   when 'debian'
     package 'libapache2-mod-php5'
-      notifies :run, 'execute[generate-module-list]', :immediately
-    end
   when 'rhel'
     include_recipe 'rackspace_php::default'
-    notifies :run, 'execute[generate-module-list]', :immediately
+    package 'php' do
+      notifies :run, 'execute[generate-module-list]', :immediately
+    end
   end
   
   file "#{node['rackspace_apache']['dir']}/conf.d/php.conf" do
