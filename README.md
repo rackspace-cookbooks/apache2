@@ -277,9 +277,9 @@ This definition includes some recipes to make sure the system is
 configured to have Apache and some sane default modules:
 
 * `apache2`
-* `apache2::mod_rewrite`
-* `apache2::mod_deflate`
-* `apache2::mod_headers`
+* `mod_rewrite`
+* `mod_deflate`
+* `mod_headers`
 
 It will then configure the template (see __Parameters__ and
 __Examples__ below), and enable or disable the site per the `enable`
@@ -303,7 +303,7 @@ a recipe, see __Examples__.
 ### Examples:
 
 All parameters are passed into the template. You can use whatever you
-like. The apache2 cookbook comes with a `web_app.conf.erb` template as
+like. The rackspace_apache cookbook comes with a `web_app.conf.erb` template as
 an example. The following parameters are used in the template:
 
 * `server_name` - ServerName directive.
