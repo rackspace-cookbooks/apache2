@@ -177,8 +177,8 @@ template "#{node['rackspace_apache']['dir']}/sites-available/default" do
   notifies :restart, 'service[apache2]'
 end
 
-include_recipe 'rackspace_apache::modules'
-
 apache_site 'default' do
   enable node['rackspace_apache']['default_site_enabled']
 end
+
+include_recipe 'rackspace_apache::modules'
