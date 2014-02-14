@@ -9,12 +9,20 @@ describe 'rackspace_apache::default' do
     expect(chef_run).to install_package('httpd')
   end
 
+  it 'enables a service named apache2' do
+    expect(chef_run).to enable_service('apache2')
+  end
+
   it 'installs perl package' do
     expect(chef_run).to install_package('perl')
   end
 
   it 'creates /usr/local/bin/apache2_module_conf_generate.pl' do
     expect(chef_run).to create_cookbook_file('/usr/local/bin/apache2_module_conf_generate.pl')
+  end
+
+  it 'runs generate-module-list' do
+    expect(chef_run).to_not run_execute('generate-module-list')
   end
 
   it 'create /var/log/httpd' do
@@ -172,5 +180,9 @@ describe 'rackspace_apache::default' do
 
   it 'creates/etc/httpd/sites-available/default' do
     expect(chef_run).to create_template('/etc/httpd/sites-available/default')
+  end
+
+  it 'runs a2dissite default' do
+    expect(chef_run).to_not run_execute('a2dissite default')
   end
 end
