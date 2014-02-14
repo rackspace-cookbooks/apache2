@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-define :apache_site, :enable => true do
+define :apache_site, enable: true do
   include_recipe 'rackspace_apache::default'
 
   if params[:enable]

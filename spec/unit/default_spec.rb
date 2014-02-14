@@ -14,7 +14,7 @@ describe 'rackspace_apache::default' do
   end
 
   it 'creates /usr/local/bin/apache2_module_conf_generate.pl' do
-    expect(chef_run).to render_file('/usr/local/bin/apache2_module_conf_generate.pl')
+    expect(chef_run).to create_cookbook_file('/usr/local/bin/apache2_module_conf_generate.pl')
   end
 
   it 'create /var/log/httpd' do
@@ -138,6 +138,10 @@ describe 'rackspace_apache::default' do
     )
   end
 
+  it '/etc/sysconfig/httpd' do
+    expect(chef_run).to create_template('/etc/sysconfig/httpd')
+  end
+
   it 'creates /etc/httpd/conf/httpd.conf' do
     expect(chef_run).to create_template('/etc/httpd/conf/httpd.conf').with(
       user: 'root',
@@ -164,5 +168,9 @@ describe 'rackspace_apache::default' do
       user: 'root',
       group: 'root'
     )
+  end
+
+  it 'creates/etc/httpd/sites-available/default' do
+    expect(chef_run).to create_template('/etc/httpd/sites-available/default')
   end
 end

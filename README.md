@@ -21,21 +21,15 @@ below.
 Requirements
 ============
 
-## Ohai and Chef:
-
-* Ohai: 0.6.12+
-* Chef: 0.10.10+
-
-As of v1.2.0, this cookbook makes use of `node['platform_family']` to
-simplify platform selection logic. This attribute was introduced in
-Ohai v0.6.12. The recipe methods were introduced in Chef v0.10.10. If
-you must run an older version of Chef or Ohai, use [version 1.1.16 of
-this cookbook](http://community.opscode.com/cookbooks/apache2/versions/1_1_16/downloads).
 
 ## Cookbooks:
 
 This cookbook doesn't have direct dependencies on other cookbooks, as
-none are needed for the default recipe or the general use cases.
+none are needed for the default recipe. There are two specific cases where
+new recipes are needed.
+
+* rackspace_logrotate is needed to run the rackspace_apache::logrotate recipe
+* rackspace_php is needed to install the mod_php module within rackspace_apache::modules
 
 Depending on your OS configuration and security policy, you may need
 additional recipes or cookbooks for this cookbook's recipes to
@@ -44,10 +38,9 @@ settings may affect the behavior of this cookbook:
 
 * apt cache outdated
 
-On Ubuntu/Debian, use Opscode's `apt` cookbook to ensure the package
+On Ubuntu/Debian, use the `rackspace_apt` cookbook to ensure the package
 cache is updated so Chef can install packages, or consider putting
 apt-get in your bootstrap process or
-[knife bootstrap template](http://wiki.opscode.com/display/chef/Knife+Bootstrap).
 
 ## Platforms:
 
@@ -156,7 +149,6 @@ mod\_ssl attributes
 Recipes
 =======
 
-
 default
 -------
 
@@ -168,7 +160,7 @@ logrotate
 ---------
 
 Logrotate adds a logrotate entry for your apache2 logs. This recipe
-requires the `logrotate` cookbook; ensure that `recipe[logrotate]` is
+requires the `logrotate` cookbook; ensure that `recipe[rackspace_apache::logrotate]` is
 in the node's expanded run list.
 
 modules
@@ -357,6 +349,12 @@ create a basic role for web servers that provide both HTTP and HTTPS:
 
 For examples of using the definitions in your own recipes, see their
 respective sections above.
+
+Contributing
+============
+
+Please see contributing guidelines at [contributing](https://github.com/rackspace-cookbooks/contributing/blob/master/CONTRIBUTING.md)
+
 
 License and Authors
 ===================

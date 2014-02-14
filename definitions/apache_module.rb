@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-define :apache_module, :enable => true, :conf => false do
+define :apache_module, enable: true, conf: false do
   include_recipe 'rackspace_apache::default'
 
   params[:filename]    = params[:filename] || "mod_#{params[:name]}.so"

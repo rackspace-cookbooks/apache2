@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-define :web_app, :template => 'web_app.conf.erb', :enable => true do
+define :web_app, template: 'web_app.conf.erb', enable: true do
 
   application_name = params[:name]
 
@@ -33,8 +33,8 @@ define :web_app, :template => 'web_app.conf.erb', :enable => true do
     mode     '0644'
     cookbook params[:cookbook] if params[:cookbook]
     variables(
-      :application_name => application_name,
-      :params           => params
+      application_name: application_name,
+      params: params
     )
     if ::File.exists?("#{node['rackspace_apache']['dir']}/sites-enabled/#{application_name}.conf")
       notifies :reload, 'service[apache2]'
