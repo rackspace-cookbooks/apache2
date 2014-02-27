@@ -182,7 +182,7 @@ if node['rackspace_apache']['enable_mod_php5'] == true
 
 # add additional modules as defined in node['rackspace_apache']['additional_modules'] 
   if node['rackspace_apache']['additional_modules'].length > 0
-    node['rackspace_apache']['additional_modules'] .each do |modz|
+    node['rackspace_apache']['additional_modules'].each do |modz|
       apache_module modz
     end
   end
