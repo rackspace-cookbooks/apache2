@@ -24,7 +24,7 @@ find(
       return 1 if $File::Find::name !~ /\.so$/;
       my $modfile = $_;
       $modfile =~ /(lib|mod_)(.+)\.so$/;
-      my $modname  = $2;
+      my $modname = $2;
       my $filename = "$ARGV[1]/$modname.load";
       unless ( -f $filename ) {
         open( FILE, ">", $filename ) or die "Cannot open $filename";
@@ -38,4 +38,3 @@ find(
 );
 
 exit 0;
-

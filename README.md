@@ -1,13 +1,10 @@
-apache2 Cookbook
+rackspace_apache Cookbook
 ================
-[![Build Status](https://secure.travis-ci.org/opscode-cookbooks/apache2.png?branch=master)](http://travis-ci.org/opscode-cookbooks/apache2)
-
 
 This cookbook provides a complete Debian/Ubuntu style Apache HTTPD
-configuration. Non-Debian based distributions such as Red Hat/CentOS,
-ArchLinux and others supported by this cookbook will have a
-configuration that mimics Debian/Ubuntu style as it is easier to
-manage with Chef.
+configuration. Non-Debian based distributions such as Red Hat/CentOS
+supported by this cookbook will have a configuration that mimics 
+Debian/Ubuntu style as it is easier to manage with Chef.
 
 Debian-style Apache configuration uses scripts to manage modules and
 sites (vhosts). The scripts are:
@@ -24,21 +21,15 @@ below.
 Requirements
 ============
 
-## Ohai and Chef:
-
-* Ohai: 0.6.12+
-* Chef: 0.10.10+
-
-As of v1.2.0, this cookbook makes use of `node['platform_family']` to
-simplify platform selection logic. This attribute was introduced in
-Ohai v0.6.12. The recipe methods were introduced in Chef v0.10.10. If
-you must run an older version of Chef or Ohai, use [version 1.1.16 of
-this cookbook](http://community.opscode.com/cookbooks/apache2/versions/1_1_16/downloads).
 
 ## Cookbooks:
 
 This cookbook doesn't have direct dependencies on other cookbooks, as
-none are needed for the default recipe or the general use cases.
+none are needed for the default recipe. There are two specific cases where
+new recipes are needed.
+
+* rackspace_logrotate is needed to run the rackspace_apache::logrotate recipe
+* rackspace_php is needed to install the mod_php module within rackspace_apache::modules
 
 Depending on your OS configuration and security policy, you may need
 additional recipes or cookbooks for this cookbook's recipes to
@@ -46,94 +37,28 @@ converge on the node. In particular, the following Operating System
 settings may affect the behavior of this cookbook:
 
 * apt cache outdated
-* SELinux enabled
-* IPtables
-* Compile tools
-* 3rd party repositories
 
-On Ubuntu/Debian, use Opscode's `apt` cookbook to ensure the package
+On Ubuntu/Debian, use the `rackspace_apt` cookbook to ensure the package
 cache is updated so Chef can install packages, or consider putting
 apt-get in your bootstrap process or
-[knife bootstrap template](http://wiki.opscode.com/display/chef/Knife+Bootstrap).
-
-On RHEL, SELinux is enabled by default. The `selinux` cookbook
-contains a `permissive` recipe that can be used to set SELinux to
-"Permissive" state. Otherwise, additional recipes need to be created
-by the user to address SELinux permissions.
-
-The easiest but **certainly not ideal way** to deal with IPtables is
-to flush all rules. Opscode does provide an `iptables` cookbook but is
-migrating from the approach used there to a more robust solution
-utilizing a general "firewall" LWRP that would have an "iptables"
-provider. Alternately, you can use ufw, with Opscode's `ufw` and
-`firewall` cookbooks to set up rules. See those cookbooks' READMEs for
-documentation.
-
-Build/compile tools may not be installed on the system by default.
-Some recipes (e.g., `apache2::mod_auth_openid`) build the module from
-source. Use Opscode's `build-essential` cookbook to get essential
-build packages installed.
-
-On ArchLinux, if you are using the `apache2::mod_auth_openid` recipe,
-you also need the `pacman` cookbook for the `pacman_aur` LWRP. Put
-`recipe[pacman]` on the node's expanded run list (on the node or in a
-role). This is not an explicit dependency because it is only required
-for this single recipe and platform; the pacman default recipe
-performs `pacman -Sy` to keep pacman's package cache updated.
-
-The `apache2::god_monitor` recipe uses a definition from the `god`
-cookbook. Include `recipe[god]` in the node's expanded run list to
-ensure that the cookbook is available to the node, and to set up `god`.
 
 ## Platforms:
 
 The following platforms and versions are tested and supported using
 Opscode's [test-kitchen](http://github.com/opscode/test-kitchen).
 
-* Ubuntu 10.04, 12.04
-* CentOS 5.8, 6.3
+* Ubuntu 12.04
+* Debian 7.x
+* CentOS 6.x
+* RHEL 6.x
 
-The following platform families are supported in the code, and are
-assumed to work based on the successful testing on Ubuntu and CentOS.
-
-* Debian
-* Red Hat (rhel)
-* Fedora
-* Amazon Linux
-
-The following platforms are also supported in the code, have been
-tested manually but are not tested under test-kitchen.
-
-* SUSE/OpenSUSE
-* ArchLinux
-* FreeBSD
-
-### Notes for RHEL Family:
-
-On Red Hat Enterprise Linux and derivatives, the EPEL repository may
-be necessary to install packages used in certain recipes. The
-`apache2::default` recipe, however, does not require any additional
-repositories. Opscode's `yum` cookbook contains a recipe to add the
-EPEL repository. See __Examples__ for more information.
-
-### Notes for FreeBSD:
-
-The `apache2::mod_php5` recipe depends on the `freebsd` cookbook,
-which it uses to set the correct options for compiling the `php5` port
-from sources. You need to ensure the `freebsd` is in the expanded run
-list, or this recipe will fail. We don't set an explicit dependency
-because we feel the `freebsd` cookbook is something users would want
-on their nodes, and due to the generality of this cookbook we don't
-want additional specific dependencies.
 
 Tests
 =====
 
 This cookbook in the
 [source repository](https://github.com/opscode-cookbooks/apache2)
-contains minitest and cucumber tests. This is an initial proof of
-concept that will be fleshed out with more supporting infrastructure
-at a future time.
+contains minitests.
 
 Please see the CONTRIBUTING file for information on how to add tests
 for your contributions.
@@ -152,19 +77,18 @@ attributes are determined based on the node's platform. See the
 attributes/default.rb file for default values in the case statement at
 the top of the file.
 
-* `node['apache']['dir']` - Location for the Apache configuration
-* `node['apache']['log_dir']` - Location for Apache logs
-* `node['apache']['error_log']` - Location for the default error log
-* `node['apache']['access_log']` - Location for the default access log
-* `node['apache']['user']` - User Apache runs as
-* `node['apache']['group']` - Group Apache runs as
-* `node['apache']['binary']` - Apache httpd server daemon
-* `node['apache']['icondir']` - Location for icons
-* `node['apache']['cache_dir']` - Location for cached files used by Apache itself or recipes
-* `node['apache']['pid_file']` - Location of the PID file for Apache httpd
-* `node['apache']['lib_dir']` - Location for shared libraries
-* `node['apache']['default_site_enabled']` - Default site enabled. Default is false.
-* `node['apache']['ext_status']` - if true, enables ExtendedStatus for `mod_status`
+* `node['rackspace_apache']['dir']` - Location for the Apache configuration
+* `node['rackspace_apache']['log_dir']` - Location for Apache logs
+* `node['rackspace_apache']['error_log']` - Location for the default error log
+* `node['rackspace_apache']['access_log']` - Location for the default access log
+* `node['rackspace_apache']['user']` - User Apache runs as
+* `node['rackspace_apache']['group']` - Group Apache runs as
+* `node['rackspace_apache']['binary']` - Apache httpd server daemon
+* `node['rackspace_apache']['icondir']` - Location for icons
+* `node['rackspace_apache']['cache_dir']` - Location for cached files used by Apache itself or recipes
+* `node['rackspace_apache']['pid_file']` - Location of the PID file for Apache httpd
+* `node['rackspace_apache']['lib_dir']` - Location for shared libraries
+* `node['rackspace_apache']['default_site_enabled']` - Default site enabled. Default is false.
 
 General settings
 ----------------
@@ -172,16 +96,20 @@ General settings
 These are general settings used in recipes and templates. Default
 values are noted.
 
-* `node['apache']['listen_addresses']` - Addresses that httpd should listen on. Default is any ("*").
-* `node['apache']['listen_ports']` - Ports that httpd should listen on. Default is port 80.
-* `node['apache']['contact']` - Value for ServerAdmin directive. Default "ops@example.com".
-* `node['apache']['timeout']` - Value for the Timeout directive. Default is 300.
-* `node['apache']['keepalive']` - Value for the KeepAlive directive. Default is On.
-* `node['apache']['keepaliverequests']` - Value for MaxKeepAliveRequests. Default is 100.
-* `node['apache']['keepalivetimeout']` - Value for the KeepAliveTimeout directive. Default is 5.
-* `node['apache']['default_modules']` - Array of module names. Can take "mod_FOO" or "FOO" as names, where FOO is the apache module, e.g. "`mod_status`" or "`status`".
-
-The modules listed in `default_modules` will be included as recipes in `recipe[apache::default]`.
+* `node['rackspace_apache']['config']['listen_addresses']` - Addresses that httpd should listen on. Default is any ("*").
+* `node['rackspace_apache']['config']['listen_ports']` - Ports that httpd should listen on. Default is port 80.
+* `node['rackspace_apache']['config']['contact']` - Value for ServerAdmin directive. Default "ops@example.com".
+* `node['rackspace_apache']['config']['timeout']` - Value for the Timeout directive. Default is 300.
+* `node['rackspace_apache']['config']['keepalive']` - Value for the KeepAlive directive. Default is On.
+* `node['rackspace_apache']['config']['keepaliverequests']` - Value for MaxKeepAliveRequests. Default is 100.
+* `node['rackspace_apache']['config']['keepalivetimeout']` - Value for the KeepAliveTimeout directive. Default is 5.
+* `node['rackspace_apache']['default_modules']` - Array of module names. This list can be shortened, but do not add new modules here use the `node['rackspace_apache']['additional_modules']` array.
+* `node['rackspace_apache']['enable_mod_ssl']` - Set to false by default. Enable to add mod_ssl to the apache configuration.
+* `node['rackspace_apache']['enable_mod_proxy']` - Set to false by default. Enable to add mod_proxy to the apache configuration.
+* `node['rackspace_apache']['enable_mod_wsgi']` - Set to false by default. Enable to add mod_wsgi to the apache configuration.
+* `node['rackspace_apache']['enable_mod_cgi']` - Set to false by default. Enable to add mod_cgi to the apache configuration.
+* `node['rackspace_apache']['enable_mod_php5']` - Set to false by default. Enable to add mod_php to the apache configuration.
+* `node['rackspace_apache']['additional_modules']` - Array to add additional modules not already listed in default or set as a boleen such as mod_ssl, mod_php, mod_proxy, mod_wsgi, and mod_cgi.
 
 Prefork attributes
 ------------------
@@ -189,12 +117,12 @@ Prefork attributes
 Prefork attributes are used for tuning the Apache HTTPD prefork MPM
 configuration.
 
-* `node['apache']['prefork']['startservers']` - initial number of server processes to start. Default is 16.
-* `node['apache']['prefork']['minspareservers']` - minimum number of spare server processes. Default 16.
-* `node['apache']['prefork']['maxspareservers']` - maximum number of spare server processes. Default 32.
-* `node['apache']['prefork']['serverlimit']` - upper limit on configurable server processes. Default 400.
-* `node['apache']['prefork']['maxclients']` - Maximum number of simultaneous connections.
-* `node['apache']['prefork']['maxrequestsperchild']` - Maximum number of request a child process will handle. Default 10000.
+* `node['rackspace_apache']['config']['prefork']['startservers']` - initial number of server processes to start. Default is 16.
+* `node['rackspace_apache']['config']['prefork']['minspareservers']` - minimum number of spare server processes. Default 16.
+* `node['rackspace_apache']['config']['prefork']['maxspareservers']` - maximum number of spare server processes. Default 32.
+* `node['rackspace_apache']['config']['prefork']['serverlimit']` - upper limit on configurable server processes. Default 400.
+* `node['rackspace_apache']['config']['prefork']['maxclients']` - Maximum number of simultaneous connections.
+* `node['rackspace_apache']['config']['prefork']['maxrequestsperchild']` - Maximum number of request a child process will handle. Default 10000.
 
 Worker attributes
 -----------------
@@ -202,174 +130,44 @@ Worker attributes
 Worker attributes are used for tuning the Apache HTTPD worker MPM
 configuration.
 
-* `node['apache']['worker']['startservers']` - Initial number of server processes to start. Default 4
-* `node['apache']['worker']['serverlimit']` - upper limit on configurable server processes. Default 16.
-* `node['apache']['worker']['maxclients']` - Maximum number of simultaneous connections. Default 1024.
-* `node['apache']['worker']['minsparethreads']` - Minimum number of spare worker threads. Default 64
-* `node['apache']['worker']['maxsparethreads']` - Maximum number of spare worker threads. Default 192.
-* `node['apache']['worker']['maxrequestsperchild']` - Maximum number of requests a child process will handle.
+* `node['rackspace_apache']['config']['worker']['startservers']` - Initial number of server processes to start. Default 4
+* `node['rackspace_apache']['config']['worker']['serverlimit']` - upper limit on configurable server processes. Default 16.
+* `node['rackspace_apache']['config']['worker']['maxclients']` - Maximum number of simultaneous connections. Default 1024.
+* `node['rackspace_apache']['config']['worker']['minsparethreads']` - Minimum number of spare worker threads. Default 64
+* `node['rackspace_apache']['config']['worker']['maxsparethreads']` - Maximum number of spare worker threads. Default 192.
+* `node['rackspace_apache']['config']['worker']['maxrequestsperchild']` - Maximum number of requests a child process will handle.
 
-mod\_auth\_openid attributes
-----------------------------
-
-The following attributes are in the `attributes/mod_auth_openid.rb`
-file. Like all Chef attributes files, they are loaded as well, but
-they're logistically unrelated to the others, being specific to the
-`mod_auth_openid` recipe.
-
-* `node['apache']['mod_auth_openid']['checksum']` - sha256sum of the tarball containing the source.
-* `node['apache']['mod_auth_openid']['ref']` - Any sha, tag, or branch found from https://github.com/bmuller/mod_auth_openid
-* `node['apache']['mod_auth_openid']['cache_dir']` - the cache directory is where the sqlite3 database is stored. It is separate so it can be managed as a directory resource.
-* `node['apache']['mod_auth_openid']['dblocation']` - filename of the sqlite3 database used for directive `AuthOpenIDDBLocation`, stored in the `cache_dir` by default.
-* `node['apache']['mod_auth_openid']['configure_flags']` - optional array of configure flags passed to the `./configure` step in the compilation of the module.
 
 mod\_ssl attributes
 -------------------
 
-* `node['apache']['mod_ssl']['cipher_suite']` - sets the
+* `node['rackspace_apache']['config']['mod_ssl']['cipher_suite']` - sets the
   SSLCiphersuite value to the specified string. The default is
   considered "sane" but you may need to change it for your local
-  security policy, e.g. if you have PCI-DSS requirements. Additional
-  commentary on the
-  [original pull request](https://github.com/opscode-cookbooks/apache2/pull/15#commitcomment-1605406).
+  security policy, e.g. if you have PCI-DSS requirements. 
 
 Recipes
 =======
-
-Most of the recipes in the cookbook are for enabling Apache modules.
-Where additional configuration or behavior is used, it is documented
-below in more detail.
-
-The following recipes merely enable the specified module: `mod_alias`,
-`mod_basic`, `mod_digest`, `mod_authn_file`, `mod_authnz_ldap`,
-`mod_authz_default`, `mod_authz_groupfile`, `mod_authz_host`,
-`mod_authz_user`, `mod_autoindex`, `mod_cgi`, `mod_dav_fs`,
-`mod_dav_svn`, `mod_deflate`, `mod_dir`, `mod_env`, `mod_expires`,
-`mod_headers`, `mod_ldap`, `mod_log_config`, `mod_mime`,
-`mod_negotiation`, `mod_proxy`, `mod_proxy_ajp`, `mod_proxy_balancer`,
-`mod_proxy_connect`, `mod_proxy_http`, `mod_python`, `mod_rewrite`,
-`mod_setenvif`, `mod_status`, `mod_wsgi`, `mod_xsendfile`.
-
-On RHEL Family distributions, certain modules ship with a config file
-with the package. The recipes here may delete those configuration
-files to ensure they don't conflict with the settings from the
-cookbook, which will use per-module configuration in
-`/etc/httpd/mods-enabled`.
 
 default
 -------
 
 The default recipe does a number of things to set up Apache HTTPd. It
 also includes a number of modules based on the attribute
-`node['apache']['default_modules']` as recipes.
+`node['rackspace_apache']['default_modules']` as recipes.
 
 logrotate
 ---------
 
 Logrotate adds a logrotate entry for your apache2 logs. This recipe
-requires the `logrotate` cookbook; ensure that `recipe[logrotate]` is
+requires the `logrotate` cookbook; ensure that `recipe[rackspace_apache::logrotate]` is
 in the node's expanded run list.
 
-mod\_auth\_cas
+modules
 --------------
 
-This recipe installs the proper package and enables the `auth_cas`
-module. It can install from source or package. Package is the default,
-set the attribute `node['apache']['mod_auth_cas']['from_source']` to
-true to enable source installation. Modify the version to install by
-changing the attribute
-`node['apache']['mod_auth_cas']['source_revision']`. It is a version
-tag by default, but could be master, or another tag, or branch.
+Modules add all the required modules to apache. This starts by installing the default array of modules then checks for special and additional modules that need to be installed. The only module of special instest is the `mod_ssl` module, this will append port 443 to the `node['rackspace_apache']['config']['listen_ports']` attribute array and update the ports.conf.
 
-The module configuration is written out with the `CASCookiePath` set,
-otherwise an error loading the module may cause Apache to not start.
-
-**Note**: This recipe does not work on EL 6 platforms unless
-epel-testing repository is enabled (outside the scope of this
-cookbook), or the package version 1.0.8.1-3.el6 or higher is otherwise
-available to the system due to this bug:
-
-https://bugzilla.redhat.com/show_bug.cgi?format=multiple&id=708550
-
-mod\_auth\_openid
------------------
-
-**Changed via COOK-915**
-
-This recipe compiles the module from source. In addition to
-`build-essential`, some other packages are included for installation
-like the GNU C++ compiler and development headers.
-
-To use the module in your own cookbooks to authenticate systems using
-OpenIDs, specify an array of OpenIDs that are allowed to authenticate
-with the attribute `node['apache']['allowed_openids']`. Use the
-following in a vhost to protect with OpenID authentication:
-
-    AuthType OpenID require user <%= node['apache']['allowed_openids'].join(' ') %>
-    AuthOpenIDDBLocation <%= node['apache']['mod_auth_openid']['dblocation'] %>
-
-Change the DBLocation with the attribute as required; this file is in
-a different location than previous versions, see below. It should be a
-sane default for most platforms, though, see
-`attributes/mod_auth_openid.rb`.
-
-### Changes from COOK-915:
-
-* `AuthType OpenID` instead of `AuthOpenIDEnabled On`.
-* `require user` instead of `AuthOpenIDUserProgram`.
-* A bug(?) in `mod_auth_openid` causes it to segfault when attempting
-  to update the database file if the containing directory is not
-  writable by the HTTPD process owner (e.g., www-data), even if the
-  file is writable. In order to not interfere with other settings from
-  the default recipe in this cookbook, the db file is moved.
-
-mod\_fastcgi
-------------
-
-Install the fastcgi package and enable the module.
-
-Only work on Debian/Ubuntu
-
-mod\_fcgid
-----------
-
-Installs the fcgi package and enables the module. Requires EPEL on
-RHEL family.
-
-On RHEL family, this recipe will delete the fcgid.conf and on version
-6+, create the /var/run/httpd/mod_fcgid` directory, which prevents the
-emergency error:
-
-    [emerg] (2)No such file or directory: mod_fcgid: Can't create shared memory for size XX bytes
-
-mod\_php5
---------
-
-Simply installs the appropriate package on Debian, Ubuntu and
-ArchLinux.
-
-On Red Hat family distributions including Fedora, the php.conf that
-comes with the package is removed. On RHEL platforms less than v6, the
-`php53` package is used.
-
-mod\_ssl
---------
-
-Besides installing and enabling `mod_ssl`, this recipe will append
-port 443 to the `node['apache']['listen_ports']` attribute array and
-update the ports.conf.
-
-god\_monitor
-------------
-
-Sets up a `god` monitor for Apache. External requirements are the
-`god` and `runit` cookbooks from Opscode. When using this recipe,
-include `recipe[god]` in the node's expanded run list to ensure the
-client downloads it; `god` depends on runit so that will also be
-downloaded.
-
-**Note** This recipe is not tested under test-kitchen yet and is
-  pending fix in COOK-744.
 
 Definitions
 ===========
@@ -389,7 +187,7 @@ directly.
 
 This will use a template resource to write the module's configuration
 file in the `mods-available` under the Apache configuration directory
-(`node['apache']['dir']`). This is a platform-dependent location. See
+(`node['rackspace_apache']['dir']`). This is a platform-dependent location. See
 __apache\_module__.
 
 ### Parameters:
@@ -399,7 +197,7 @@ __apache\_module__.
 
 ### Examples:
 
-Create `#{node['apache']['dir']}/mods-available/alias.conf`.
+Create `#{node['rackspace_apache']['dir']}/mods-available/alias.conf`.
 
     apache_conf "alias"
 
@@ -407,9 +205,9 @@ apache\_module
 --------------
 
 Enable or disable an Apache module in
-`#{node['apache']['dir']}/mods-available` by calling `a2enmod` or
+`#{node['rackspace_apache']['dir']}/mods-available` by calling `a2enmod` or
 `a2dismod` to manage the symbolic link in
-`#{node['apache']['dir']}/mods-enabled`. If the module has a
+`#{node['rackspace_apache']['dir']}/mods-enabled`. If the module has a
 configuration file, a template should be created in the cookbook where
 the definition is used. See __Examples__.
 
@@ -447,9 +245,9 @@ apache\_site
 ------------
 
 Enable or disable a VirtualHost in
-`#{node['apache']['dir']}/sites-available` by calling a2ensite or
+`#{node['rackspace_apache']['dir']}/sites-available` by calling a2ensite or
 a2dissite to manage the symbolic link in
-`#{node['apache']['dir']}/sites-enabled`.
+`#{node['rackspace_apache']['dir']}/sites-enabled`.
 
 The template for the site must be managed as a separate resource. To
 combine the template with enabling a site, see `web_app`.
@@ -471,9 +269,9 @@ This definition includes some recipes to make sure the system is
 configured to have Apache and some sane default modules:
 
 * `apache2`
-* `apache2::mod_rewrite`
-* `apache2::mod_deflate`
-* `apache2::mod_headers`
+* `mod_rewrite`
+* `mod_deflate`
+* `mod_headers`
 
 It will then configure the template (see __Parameters__ and
 __Examples__ below), and enable or disable the site per the `enable`
@@ -484,7 +282,7 @@ parameter.
 Current parameters used by the definition:
 
 * `name` - The name of the site. The template will be written to
-  `#{node['apache']['dir']}/sites-available/#{params['name']}.conf`
+  `#{node['rackspace_apache']['dir']}/sites-available/#{params['name']}.conf`
 * `cookbook` - Optional. Cookbook where the source template is. If
   this is not defined, Chef will use the named template in the
   cookbook where the definition is used.
@@ -497,7 +295,7 @@ a recipe, see __Examples__.
 ### Examples:
 
 All parameters are passed into the template. You can use whatever you
-like. The apache2 cookbook comes with a `web_app.conf.erb` template as
+like. The rackspace_apache cookbook comes with a `web_app.conf.erb` template as
 an example. The following parameters are used in the template:
 
 * `server_name` - ServerName directive.
@@ -552,6 +350,12 @@ create a basic role for web servers that provide both HTTP and HTTPS:
 For examples of using the definitions in your own recipes, see their
 respective sections above.
 
+Contributing
+============
+
+Please see contributing guidelines at [contributing](https://github.com/rackspace-cookbooks/contributing/blob/master/CONTRIBUTING.md)
+
+
 License and Authors
 ===================
 
@@ -569,7 +373,9 @@ License and Authors
 * Author:: Sean OMeara <someara@opscode.com>
 * Author:: Seth Chisamore <schisamo@opscode.com>
 * Author:: Gilles Devaux <gilles@peerpong.com>
+* Author:: Christopher Coffey <christopher.coffey@rackspace.com.
 
+* Copyright:: 2014, Rackspace US, Inc.
 * Copyright:: 2009-2012, Opscode, Inc
 * Copyright:: 2011, Atriso
 * Copyright:: 2011, CustomInk, LLC.

@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: rackspace_apache
-# Definition:: apache_conf
+# Cookbook Name:: apache_test
+# Recipe:: mod_auth_basic
 #
-# Copyright 2008-2013, Opscode, Inc.
+# Copyright 2012, Opscode, Inc.
 # Copyright 2014, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,19 @@
 # limitations under the License.
 #
 
-define :apache_conf do
-  template "#{node['rackspace_apache']['dir']}/mods-available/#{params[:name]}.conf" do
-    source   "mods/#{params[:name]}.conf.erb"
-    mode     '0644'
-    notifies :restart, 'service[apache2]'
-  end
+include_recipe 'rackspace_apache::default'
+include_recipe 'rackspace_apache::modules'
+
+directory "#{node['apache_test']['root_dir']}/secure" do
+  action :create
+end
+
+execute 'add-credentials' do
+  command "htpasswd -b -c #{node['apache_test']['root_dir']}/secure/.htpasswd #{node['apache_test']['auth_username']} #{node['apache_test']['auth_password']}"
+  action :run
+end
+
+web_app 'secure' do
+  template 'auth_basic.conf.erb'
+  auth_user_file "#{node['apache_test']['root_dir']}/secure/.htpasswd"
 end

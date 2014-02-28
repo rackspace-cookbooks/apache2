@@ -6,7 +6,7 @@
 # available, but does not work with some modules (such as PHP).
 # The service must be stopped before changing this variable.
 #
-HTTPD=<%= node['apache']['binary'] %>
+HTTPD=<%= node['rackspace_apache']['binary'] %>
 
 #
 # To pass additional options (for instance, -D definitions) to the
@@ -28,4 +28,4 @@ HTTPD=<%= node['apache']['binary'] %>
 # specified in httpd.conf (via the PidFile directive), the new
 # location needs to be reported in the PIDFILE.
 #
-#PIDFILE=<%= node['apache']['pid_file'] %>
+#PIDFILE=<%= node['rackspace_apache']['pid_file'] %>

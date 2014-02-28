@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: rackspace_apache
-# Definition:: apache_conf
+# Cookbook Name:: apache_test
+# Recipe:: default
 #
-# Copyright 2008-2013, Opscode, Inc.
+# Copyright 2012, Opscode, Inc.
 # Copyright 2014, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,4 @@
 # limitations under the License.
 #
 
-define :apache_conf do
-  template "#{node['rackspace_apache']['dir']}/mods-available/#{params[:name]}.conf" do
-    source   "mods/#{params[:name]}.conf.erb"
-    mode     '0644'
-    notifies :restart, 'service[apache2]'
-  end
-end
+include_recipe 'rackspace_apache::default'

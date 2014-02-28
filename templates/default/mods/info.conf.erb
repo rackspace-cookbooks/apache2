@@ -9,6 +9,6 @@
     SetHandler server-info
     Order deny,allow
     Deny from all
-    Allow from <%= node['apache']['info_allow_list'] %>
+    Allow from <%= node['rackspace_apache']['info_allow_list'] %>
   </Location>
 </IfModule>
