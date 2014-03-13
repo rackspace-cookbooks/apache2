@@ -19,16 +19,14 @@
 #
 
 # checks to see if module is listed in default_modules list and if so install.
-if node['rackspace_apache']['default_modules'].include?('status')
-  apache_module 'status' do
-    conf true
-  end
+apache_module 'status' do
+  conf true
+  only_if { node['rackspace_apache']['default_modules'].include?('status') }
 end
 
-if node['rackspace_apache']['default_modules'].include?('alias')
-  apache_module 'alias' do
-    conf true
-  end
+apache_module 'alias' do
+  conf true
+  only_if { node['rackspace_apache']['default_modules'].include?('alias') }
 end
 
 if node['rackspace_apache']['default_modules'].include?('auth_basic')
@@ -55,38 +53,33 @@ if node['rackspace_apache']['default_modules'].include?('authz_user')
   apache_module 'authz_user'
 end
 
-if node['rackspace_apache']['default_modules'].include?('autoindex')
-  apache_module 'autoindex' do
-    conf true
-  end
+apache_module 'autoindex' do
+  conf true
+  only_if { node['rackspace_apache']['default_modules'].include?('autoindex') }
 end
 
-if node['rackspace_apache']['default_modules'].include?('dir')
-  apache_module 'dir' do
-    conf true
-  end
+apache_module 'dir' do
+  conf true
+  only_if { node['rackspace_apache']['default_modules'].include?('dir') }
 end
 
 if node['rackspace_apache']['default_modules'].include?('env')
   apache_module 'env'
 end
 
-if node['rackspace_apache']['default_modules'].include?('mime')
-  apache_module 'mime' do
-    conf true
-  end
+apache_module 'mime' do
+  conf true
+  only_if { node['rackspace_apache']['default_modules'].include?('mime') }
 end
 
-if node['rackspace_apache']['default_modules'].include?('negotiation')
-  apache_module 'negotiation' do
-    conf true
-  end
+apache_module 'negotiation' do
+  conf true
+  only_if { node['rackspace_apache']['default_modules'].include?('negotiation') }
 end
 
-if node['rackspace_apache']['default_modules'].include?('setenvif')
-  apache_module 'setenvif' do
-    conf true
-  end
+apache_module 'setenvif' do
+  conf true
+  only_if { node['rackspace_apache']['default_modules'].include?('setenvif') }
 end
 
 if node['rackspace_apache']['default_modules'].include?('log_config')
@@ -102,10 +95,9 @@ if node['rackspace_apache']['default_modules'].include?('rewrite')
 end
 
 # checks for additional modules to install
-if node['rackspace_apache']['enable_mod_proxy'] == true
-  apache_module 'proxy' do
-    conf true
-  end
+apache_module 'proxy' do
+  conf true
+  only_if { node['rackspace_apache']['enable_mod_proxy'] == true }
 end
 
 if node['rackspace_apache']['enable_mod_ssl'] == true
