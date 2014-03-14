@@ -1,4 +1,4 @@
-<VirtualHost *:<%= @params[:server_port] || node['rackspace_apache']['listen_ports'].first %>>
+<VirtualHost *:<%= @params[:server_port] || node['rackspace_apache']['config']['listen_ports'].first %>>
   ServerName <%= @params[:server_name] %>
   ServerAlias <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
   DocumentRoot <%= @params[:docroot] %>
