@@ -57,7 +57,7 @@ when 'rhel'
   default['rackspace_apache']['cgibin_dir']  = '/var/www/cgi-bin'
   default['rackspace_apache']['icondir']     = '/var/www/icons'
   default['rackspace_apache']['cache_dir']   = '/var/cache/httpd'
-  default['rackspace_apache']['pid_file']    = '/var/run/httpd.pid'
+  default['rackspace_apache']['pid_file']    = '/var/run/httpd/httpd.pid'
   default['rackspace_apache']['lib_dir']     = node['kernel']['machine'] =~ /^i[36]86$/ ? '/usr/lib/httpd' : '/usr/lib64/httpd'
   default['rackspace_apache']['libexecdir']  = "#{node['rackspace_apache']['lib_dir']}/modules"
   default['rackspace_apache']['default_site_enabled'] = false
