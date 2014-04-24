@@ -56,7 +56,7 @@ if platform_family?('rhel')
     group  'root'
   end
 
-  %w[sites-available sites-enabled mods-available mods-enabled].each do |dir|
+  %w(sites-available sites-enabled mods-available mods-enabled).each do |dir|
     directory "#{node['rackspace_apache']['dir']}/#{dir}" do
       mode  '0755'
       owner 'root'
@@ -69,7 +69,7 @@ if platform_family?('rhel')
     action  :nothing
   end
 
-  %w[a2ensite a2dissite a2enmod a2dismod].each do |modscript|
+  %w(a2ensite a2dissite a2enmod a2dismod).each do |modscript|
     template "/usr/sbin/#{modscript}" do
       cookbook node['rackspace_apache']['template_cookbook']['modscript']
       source "#{modscript}.erb"
@@ -80,7 +80,7 @@ if platform_family?('rhel')
   end
 
   # installed by default on centos/rhel, remove in favour of mods-enabled
-  %w[proxy_ajp auth_pam authz_ldap webalizer ssl welcome].each do |f|
+  %w(proxy_ajp auth_pam authz_ldap webalizer ssl welcome).each do |f|
     file "#{node['rackspace_apache']['dir']}/conf.d/#{f}.conf" do
       action :delete
       backup false
@@ -99,11 +99,11 @@ if platform_family?('rhel')
   end
 end
 
-%W[
+%W(
   #{node['rackspace_apache']['dir']}/ssl
   #{node['rackspace_apache']['dir']}/conf.d
   #{node['rackspace_apache']['cache_dir']}
-].each do |path|
+).each do |path|
   directory path do
     mode  '0755'
     owner 'root'

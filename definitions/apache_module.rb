@@ -39,7 +39,7 @@ define :apache_module, enable: true, conf: false do
       notifies :restart, 'service[apache2]'
       not_if do
         ::File.symlink?("#{node['rackspace_apache']['dir']}/mods-enabled/#{params[:name]}.load") &&
-        (::File.exists?("#{node['rackspace_apache']['dir']}/mods-available/#{params[:name]}.conf") ? ::File.symlink?("#{node['rackspace_apache']['dir']}/mods-enabled/#{params[:name]}.conf") : true)
+        (::File.exist?("#{node['rackspace_apache']['dir']}/mods-available/#{params[:name]}.conf") ? ::File.symlink?("#{node['rackspace_apache']['dir']}/mods-enabled/#{params[:name]}.conf") : true)
       end
     end
   else
