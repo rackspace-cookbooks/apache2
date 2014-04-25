@@ -36,7 +36,7 @@ define :web_app, template: 'web_app.conf.erb', enable: true do
       application_name: application_name,
       params: params
     )
-    if ::File.exists?("#{node['rackspace_apache']['dir']}/sites-enabled/#{application_name}.conf")
+    if ::File.exist?("#{node['rackspace_apache']['dir']}/sites-enabled/#{application_name}.conf")
       notifies :reload, 'service[apache2]'
     end
   end

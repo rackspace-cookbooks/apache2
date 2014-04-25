@@ -1,3 +1,6 @@
+AllCops:
+  Exclude:
+    - Rakefile
 # Disable requirement of "encoding" headers on files
 Encoding:
   Enabled: false
@@ -23,3 +26,7 @@ IfUnlessModifier:
 # Raise allowed CyclomaticComplexity to 10.
 CyclomaticComplexity:
   Max: 10
+
+# Allow multiple spaces for Chef parameters.
+SingleSpaceBeforeFirstArg:
+  Enabled: false

@@ -22,7 +22,7 @@ platforms:
   - recipe[rackspace_apt]
 
 suites:
-- name: default 
+- name: default
   run_list:
   - recipe[rackspace_apache::default]
   - recipe[rackspace_apache_test::default]
@@ -38,8 +38,13 @@ suites:
   run_list:
   - recipe[rackspace_apache::default]
   - recipe[rackspace_apache_test::mod_ssl]
-  attributes: 
+  attributes:
     rackspace_apache:
       enable_mod_ssl: true
-  
 
+- name: mod_php5
+  run_list:
+  - recipe[rackspace_apache::default]
+  attributes:
+    rackspace_apache:
+      enable_mod_php5: true

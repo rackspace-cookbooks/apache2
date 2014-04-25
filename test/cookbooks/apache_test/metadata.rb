@@ -11,6 +11,6 @@ depends          'rackspace_yum'
 recipe           'apache_test::default', 'Test example for default recipe'
 recipe           'apache_test::mod_ssl', 'Test example for SSL'
 
-%w{debian rhel centos ubuntu}.each do |os|
+%w(debian rhel centos ubuntu).each do |os|
   supports os
 end

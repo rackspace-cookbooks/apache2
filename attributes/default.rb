@@ -22,14 +22,14 @@
 #
 
 # default modules (all OS's)
-default['rackspace_apache']['default_modules'] = %w[
+default['rackspace_apache']['default_modules'] = %w(
   status alias auth_basic authn_file authz_default authz_groupfile authz_host authz_user autoindex
   dir env mime negotiation setenvif rewrite
-]
+)
 
 # additional default modules for rhel platform_family
-%w[log_config logio].each do |log_mod|
-  default['rackspace_apache']['default_modules'] << log_mod if %w[rhel].include?(node['platform_family'])
+%w(log_config logio).each do |log_mod|
+  default['rackspace_apache']['default_modules'] << log_mod if %w(rhel).include?(node['platform_family'])
 end
 
 # addtional modules to install (set to true if needed)
@@ -57,7 +57,7 @@ when 'rhel'
   default['rackspace_apache']['cgibin_dir']  = '/var/www/cgi-bin'
   default['rackspace_apache']['icondir']     = '/var/www/icons'
   default['rackspace_apache']['cache_dir']   = '/var/cache/httpd'
-  default['rackspace_apache']['pid_file']    = '/var/run/httpd.pid'
+  default['rackspace_apache']['pid_file']    = '/var/run/httpd/httpd.pid'
   default['rackspace_apache']['lib_dir']     = node['kernel']['machine'] =~ /^i[36]86$/ ? '/usr/lib/httpd' : '/usr/lib64/httpd'
   default['rackspace_apache']['libexecdir']  = "#{node['rackspace_apache']['lib_dir']}/modules"
   default['rackspace_apache']['default_site_enabled'] = false
@@ -81,8 +81,8 @@ when 'debian'
 end
 
 # General configuration settings
-default['rackspace_apache']['config']['listen_addresses']  = %w[*]
-default['rackspace_apache']['config']['listen_ports']      = %w[80]
+default['rackspace_apache']['config']['listen_addresses']  = %w(*)
+default['rackspace_apache']['config']['listen_ports']      = %w(80)
 default['rackspace_apache']['config']['contact']           = 'apache@example.com'
 default['rackspace_apache']['config']['timeout']           = 300
 default['rackspace_apache']['config']['keepalive']         = 'On'
