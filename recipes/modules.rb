@@ -162,8 +162,13 @@ if node['rackspace_apache']['enable_mod_php5'] == true
     package 'libapache2-mod-php5'
   when 'rhel'
     include_recipe 'rackspace_php::default'
-    package 'php' do
+    # include_recipe is not a resource, so it will not trigger
+    # adding a bogus execute to trigger generation of the module list
+    execute 'trigger-generate-module-list' do
+      command 'echo "Trigger generate-module-list"'
+      subscribes :run, "file[#{node['rackspace_apache']['dir']}/conf.d/php.conf", :immediately
       notifies :run, 'execute[generate-module-list]', :immediately
+      action :nothing
     end
   end
 

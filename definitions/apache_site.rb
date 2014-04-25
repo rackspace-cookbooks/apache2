@@ -29,7 +29,7 @@ define :apache_site, enable: true do
         ::File.symlink?("#{node['rackspace_apache']['dir']}/sites-enabled/#{params[:name]}") ||
         ::File.symlink?("#{node['rackspace_apache']['dir']}/sites-enabled/000-#{params[:name]}")
       end
-      only_if { ::File.exists?("#{node['rackspace_apache']['dir']}/sites-available/#{params[:name]}") }
+      only_if { ::File.exist?("#{node['rackspace_apache']['dir']}/sites-available/#{params[:name]}") }
     end
   else
     execute "a2dissite #{params[:name]}" do
